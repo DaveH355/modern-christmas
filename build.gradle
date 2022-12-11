@@ -18,18 +18,29 @@ allprojects {
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 }
-
+task writeAllAssetsToFile {
+	doLast {
+		def assetsFolder = new File("${project.rootDir}/assets/")
+		def assetsFile = new File(assetsFolder, "assets.txt")
+		assetsFile.delete()
+		fileTree(assetsFolder).collect {assetsFolder.relativePath(it) }.each {
+			assetsFile.append(it + "\n")
+		}
+	}
+}
 configure(subprojects) {
 	apply plugin: 'java-library'
 	sourceCompatibility = 1.8
 	compileJava {
 		options.incremental = true
+		compileJava.dependsOn writeAllAssetsToFile
+
 	}
 }
 
 subprojects {
 	version = '1.0.0'
-	ext.appName = 'Jam23'
+	ext.appName = 'ModernChristmas'
 	repositories {
 		mavenCentral()
 		maven { url 'https://s01.oss.sonatype.org' }
@@ -41,4 +52,4 @@ subprojects {
 	}
 }
 
-eclipse.project.name = 'Jam23' + '-parent'
+eclipse.project.name = 'ModernChristmas' + '-parent'

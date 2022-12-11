@@ -6,4 +6,16 @@ dependencies {
 	api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 	api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+
+	//subscription system
+	implementation "org.greenrobot:eventbus-java:3.3.1"
+
+	//add local jars
+	implementation fileTree(dir: 'libs', includes: ['*.jar'])
+	implementation 'org.mini2Dx:universal-tween-engine:6.3.3'
+
+	//ultralight
+	api "com.labymedia:ultralight-java-base:0.4.6"
+	api "com.labymedia:ultralight-java-databind:0.4.6"
+	api "com.labymedia:ultralight-java-gpu:0.4.6"
 }
