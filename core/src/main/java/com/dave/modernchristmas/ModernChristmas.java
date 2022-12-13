@@ -1,21 +1,31 @@
 package com.dave.modernchristmas;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.assets.AssetManager;
-import com.dave.modernchristmas.screen.SplashScreen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.dave.modernchristmas.screen.EmptyLoadScreen;
+import com.dave.modernchristmas.screen.GameScreen;
 import com.dave.modernchristmas.ultralight.UltraLight;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.EventBusBuilder;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class ModernChristmas extends Game {
 
-	private AssetManager assetManager;
+	public static EventBus eventBus =  EventBus.builder().logNoSubscriberMessages(false).sendNoSubscriberEvent(false).build();
+	private AssetManagerResolving assetManager;
+	private Skin skin;
 	@Override
 	public void create() {
 		UltraLight.init();
-		setScreen(new SplashScreen(this));
+		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+
+		GameData.getInstance().setGame(this);
+		setScreen(new EmptyLoadScreen(this));
 	}
 
-	public void setAssetManager(AssetManager assetManager) {
+	public void setAssetManager(AssetManagerResolving assetManager) {
 		this.assetManager = assetManager;
 	}
 
@@ -28,4 +38,8 @@ public class ModernChristmas extends Game {
 	public void dispose() {
 		assetManager.dispose();
 	}
+
+    public AssetManagerResolving getAssetManager() {
+		return assetManager;
+    }
 }

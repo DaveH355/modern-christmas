@@ -1,0 +1,42 @@
+{
+    "activeFile": "untitled.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "untitled.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 303.3333333333333,
+                "y": 59.333333333333314
+            }
+        },
+        "untitled.tmx#ItemSheet_LargeItems": {
+            "scaleInDock": 2
+        },
+        "untitled.tmx#ItemSheet_SmallItems": {
+            "scaleInDock": 2
+        },
+        "untitled.tmx#TileSheet_Snow": {
+            "scaleInDock": 3
+        }
+    },
+    "last.imagePath": "C:/Users/HU/Desktop/Coding Projects/Modern Christmas/assets/map",
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+        "untitled.tmx"
+    ],
+    "project": "untitled.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "untitled.tmx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

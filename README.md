@@ -1,4 +1,8 @@
-# ModernChristmas
+# Modern Christmas: 
+
+## Story
+The world has run out of trees. You have the last Christmas tree. 
+
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/tommyettinger/gdx-liftoff).
 

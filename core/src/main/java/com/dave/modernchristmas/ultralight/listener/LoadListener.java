@@ -17,9 +17,9 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package com.dave.modernchristmas.ultralight.opengl.listener;
+package com.dave.modernchristmas.ultralight.listener;
 
-import com.dave.modernchristmas.ultralight.opengl.support.ViewContextProvider;
+
 import com.labymedia.ultralight.UltralightView;
 import com.labymedia.ultralight.databind.Databind;
 import com.labymedia.ultralight.databind.DatabindConfiguration;
@@ -27,6 +27,7 @@ import com.labymedia.ultralight.databind.api.JavaAPI;
 import com.labymedia.ultralight.databind.context.ContextProviderFactory;
 import com.labymedia.ultralight.javascript.*;
 import com.labymedia.ultralight.plugin.loading.UltralightLoadListener;
+import com.dave.modernchristmas.ultralight.util.ViewContextProvider;
 
 
 /**

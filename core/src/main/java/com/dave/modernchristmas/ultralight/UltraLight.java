@@ -8,9 +8,16 @@ import com.labymedia.ultralight.UltralightRenderer;
 import com.labymedia.ultralight.config.FontHinting;
 import com.labymedia.ultralight.config.UltralightConfig;
 import com.labymedia.ultralight.gpu.UltralightGPUDriverNativeUtil;
+import com.labymedia.ultralight.os.Architecture;
+import com.labymedia.ultralight.os.OperatingSystem;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 
 public class UltraLight {
     private static UltralightRenderer renderer;
@@ -18,13 +25,12 @@ public class UltraLight {
     private UltraLight() {}
     public static void init() {
         try {
-            Path path = Gdx.files.internal("ultralight/bin").file().toPath().toAbsolutePath();
-            System.out.println("loading from here! " + path);
-            UltralightJava.extractNativeLibrary(path);
-            UltralightGPUDriverNativeUtil.extractNativeLibrary(path);
+            Path loadPath = Gdx.files.internal("ultralight/bin").file().toPath().toAbsolutePath();
+            UltralightJava.extractNativeLibrary(loadPath);
+            UltralightGPUDriverNativeUtil.extractNativeLibrary(loadPath);
 
-            UltralightJava.load(path);
-            UltralightGPUDriverNativeUtil.load(path);
+            UltralightJava.load(loadPath);
+            UltralightGPUDriverNativeUtil.load(loadPath);
         } catch (UltralightLoadException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -32,15 +38,38 @@ public class UltraLight {
         UltralightPlatform platform = UltralightPlatform.instance();
         platform.setConfig(
                 new UltralightConfig()
-                        .resourcePath(Gdx.files.internal("ultralight/resources").file().toPath().toAbsolutePath().toString())
+                        .resourcePath(Gdx.files.local("ultralight/resources").path())
                         .fontHinting(FontHinting.SMOOTH)
         );
         platform.usePlatformFontLoader();
-        platform.usePlatformFileSystem(Gdx.files.internal("/").path());
+        platform.usePlatformFileSystem(Gdx.files.local("ultralight/").path());
+
         renderer = UltralightRenderer.create();
+
 
         System.out.println("Ultralight Loaded Successfully");
     }
+
+    public static void copyFolder(Path source, Path target, CopyOption... options)
+            throws IOException {
+        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                    throws IOException {
+                Files.createDirectories(target.resolve(source.relativize(dir).toString()));
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                    throws IOException {
+                Files.copy(file, target.resolve(source.relativize(file).toString()), options);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
 
     public static UltralightRenderer getRenderer() {
         return renderer;

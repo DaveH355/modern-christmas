@@ -17,7 +17,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package com.dave.modernchristmas.ultralight.opengl.support;
+package com.dave.modernchristmas.ultralight.util;
 
 
 import com.labymedia.ultralight.plugin.logging.UltralightLogLevel;

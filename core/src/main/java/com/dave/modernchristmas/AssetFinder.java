@@ -11,7 +11,10 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.Map;
 public class AssetFinder {
     private final AssetManagerResolving assetManager;
     private static final List<String> folderBlacklist = new ArrayList<>();
+
     private static final Map<String, Class<?>> extensionWhitelist = new HashMap<>();
 
     static {
@@ -31,7 +35,8 @@ public class AssetFinder {
         extensionWhitelist.put("atlas", TextureAtlas.class);
         extensionWhitelist.put("tmx", TiledMap.class);
 
-        folderBlacklist.add("Pixeld16/");
+        folderBlacklist.add("ultralight/");
+        folderBlacklist.add("skin/");
 
     }
     public AssetFinder(AssetManagerResolving assetManager) {
@@ -50,9 +55,6 @@ public class AssetFinder {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
-
-
         allFiles.forEach(string -> {
             FileHandle fileHandle = Gdx.files.internal(string);
 
@@ -66,4 +68,7 @@ public class AssetFinder {
         });
         System.out.println(allFiles.size + " possible files found");
     }
+
+
+
 }

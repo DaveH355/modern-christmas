@@ -17,15 +17,14 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package com.dave.modernchristmas.ultralight.opengl.support;
+package com.dave.modernchristmas.ultralight.util;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.dave.modernchristmas.ultralight.opengl.js.JavaScriptBridge;
-import com.dave.modernchristmas.ultralight.opengl.listener.LoadListener;
-import com.labymedia.ultralight.UltralightPlatform;
+import com.dave.modernchristmas.ultralight.js.JavaScriptBridge;
+import com.dave.modernchristmas.ultralight.listener.LoadListener;
 import com.labymedia.ultralight.UltralightRenderer;
 import com.labymedia.ultralight.UltralightView;
 import com.labymedia.ultralight.bitmap.UltralightBitmap;
@@ -47,6 +46,8 @@ public class ViewController {
 
     private final LoadListener loadListener;
     private final JavaScriptBridge bridge;
+    private Pixmap pixmap;
+    private Texture texture;
 
     private long lastJavascriptGarbageCollections;
 
@@ -61,6 +62,8 @@ public class ViewController {
         this.bridge = new JavaScriptBridge(view);
         this.loadListener = new LoadListener(view);
         this.view.setLoadListener(loadListener);
+
+        pixmap = new Pixmap((int) view.width(), (int) view.height(), Pixmap.Format.RGBA8888);
 
 
         this.lastJavascriptGarbageCollections = 0;
@@ -114,12 +117,15 @@ public class ViewController {
         UltralightBitmap bitmap = surface.bitmap();
 
 
+        if (texture != null) texture.dispose();
         ByteBuffer byteBuffer = bitmap.lockPixels();
 
-        Pixmap pixmap = new Pixmap((int) view.width(), (int) view.height(), Pixmap.Format.RGBA8888);
+        pixmap = new Pixmap((int) view.width(), (int) view.height(), Pixmap.Format.RGBA8888);
         pixmap.setPixels(byteBuffer);
-        Texture texture = new Texture(pixmap);
+        texture = new Texture(pixmap);
         batch.draw(texture, 0, 0);
+
+
 
         pixmap.dispose();
         bitmap.unlockPixels();
