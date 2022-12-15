@@ -52,9 +52,9 @@ public class GameScreen implements InputProcessor, Screen {
         hudBatch = new SpriteBatch();
         //game load
         camera = new OrthographicCamera();
-        camera.zoom = 0.5f;
-        camera.position.y = 75;
-        camera.position.x = 200;
+        camera.zoom = 0.40f;
+        camera.position.y = 100;
+        camera.position.x = 170;
 
         viewport = new ExtendViewport(Constants.DEFAULT_WIDTH / Constants.PIXELS_PER_METER, Constants.DEFAULT_HEIGHT / Constants.PIXELS_PER_METER, camera);
         mapWorldManager = new MapWorldManager(camera);
@@ -88,7 +88,7 @@ public class GameScreen implements InputProcessor, Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(72/255f, 107/255f, 115/255f, 1f);
+        Gdx.gl.glClearColor(36/255f,67/255f,114/255f,1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         camera.update();
@@ -190,7 +190,8 @@ public class GameScreen implements InputProcessor, Screen {
         return mapWorldManager;
     }
 
-    public void setMapWorldManager(MapWorldManager mapWorldManager) {
-        this.mapWorldManager = mapWorldManager;
+
+    public ObjectManager getObjectManager() {
+        return objectManager;
     }
 }

@@ -35,7 +35,7 @@ public class MapWorldManager {
         AssetManagerResolving assetManager = GameData.getInstance().getGame().getAssetManager();
         TiledMap tiledMap = assetManager.get("untitled.tmx", TiledMap.class);
 
-        world = new World(new Vector2(0, -30), true);
+        world = new World(new Vector2(0, -100), true);
         renderer = new TiledMapRendererBleeding(tiledMap, 1/ Constants.PIXELS_PER_METER);
         debugRenderer = new Box2DDebugRenderer();
 

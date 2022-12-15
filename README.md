@@ -3,6 +3,10 @@
 ## Story
 The world has run out of trees. You have the last Christmas tree. 
 
+## Credits 
+https://penzilla.itch.io/christmas-winter-holliday-tileset
+
+https://9e0.itch.io/cute-legends-cat-heroes
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/tommyettinger/gdx-liftoff).
 

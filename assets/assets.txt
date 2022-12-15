@@ -5,6 +5,16 @@ map/TileSheet_Festive.png
 map/TileSheet_Snow.png
 map/untitled.tiled-session
 map/untitled.tmx
+object/glass.png
+object/Meow Knight/Meow-Knight_Attack_1.png
+object/Meow Knight/Meow-Knight_Attack_2.png
+object/Meow Knight/Meow-Knight_Attack_3.png
+object/Meow Knight/Meow-Knight_Attack_4.png
+object/Meow Knight/Meow-Knight_Death.png
+object/Meow Knight/Meow-Knight_Idle.png
+object/Meow Knight/Meow-Knight_Take_Damage.png
+object/Meow Knight/Meow_Knight.aseprite
+object/pigeon_walking.png
 object/sleigh.png
 object/treesmall.png
 skin/default.fnt
