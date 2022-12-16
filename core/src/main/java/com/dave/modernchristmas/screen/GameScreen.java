@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dave.modernchristmas.Constants;
 import com.dave.modernchristmas.ModernChristmas;
 
+import com.dave.modernchristmas.event.EnemyAtTreeEvent;
 import com.dave.modernchristmas.event.GameStartEvent;
 import com.dave.modernchristmas.event.KeyInputEvent;
 import com.dave.modernchristmas.manager.MapWorldManager;
@@ -24,6 +25,9 @@ import com.dave.modernchristmas.ultralight.util.ViewController;
 import com.labymedia.ultralight.UltralightView;
 import com.labymedia.ultralight.config.UltralightViewConfig;
 import com.labymedia.ultralight.javascript.JavascriptContext;
+import com.labymedia.ultralight.javascript.JavascriptEvaluationException;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 
 import java.util.ArrayList;
@@ -46,6 +50,7 @@ public class GameScreen implements InputProcessor, Screen {
 
     public GameScreen(ModernChristmas modernChristmas) {
         this.game = modernChristmas;
+        ModernChristmas.eventBus.register(this);
         Gdx.input.setInputProcessor(this);
 
         batch = new SpriteBatch();
@@ -84,6 +89,24 @@ public class GameScreen implements InputProcessor, Screen {
         this.gameStarted = gameStarted;
         ModernChristmas.eventBus.post(new GameStartEvent());
 
+    }
+
+    @JavaScriptUse
+    public void restart() {
+        ModernChristmas.eventBus = EventBus.builder().logNoSubscriberMessages(false).sendNoSubscriberEvent(false).build();
+        game.setScreen(new GameScreen(game));
+    }
+
+    @Subscribe
+    public void enemyAtTree(EnemyAtTreeEvent event) {
+        System.out.println("got it!");
+        gameStarted = false;
+
+        try {
+            viewController.getView().evaluateScript("window.gameOver()");
+        } catch (JavascriptEvaluationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -126,12 +149,14 @@ public class GameScreen implements InputProcessor, Screen {
 
     @Override
     public void hide() {
-
+        dispose();
     }
 
     @Override
     public void dispose() {
-
+        getMapWorldManager().getWorld().dispose();
+        batch.dispose();
+        hudBatch.dispose();
     }
 
     @Override
@@ -179,6 +204,10 @@ public class GameScreen implements InputProcessor, Screen {
     public boolean mouseMoved(int screenX, int screenY) {
         viewController.onMouseMove(screenX, screenY);
         return false;
+    }
+
+    public boolean isGameStarted() {
+        return gameStarted;
     }
 
     @Override

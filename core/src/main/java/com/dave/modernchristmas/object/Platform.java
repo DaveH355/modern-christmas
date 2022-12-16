@@ -30,7 +30,7 @@ public class Platform implements GameObject{
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.x = positionX;
-        bodyDef.position.y = positionY - 60;
+        bodyDef.position.y = positionY - 10;
 
         bodyDef.type = BodyDef.BodyType.StaticBody;
 

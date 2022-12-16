@@ -48,7 +48,11 @@
    <polygon points="0,0 15.0909,-15.0909 65.0909,-15.0909 78,-0.727273"/>
   </object>
   <object id="9" x="242.515" y="144" width="75.2727" height="13.2727"/>
-  <object id="10" x="133.5" y="252.75" width="19.75" height="35.25"/>
+  <object id="10" x="133.5" y="252.75" width="19.75" height="35.25">
+   <properties>
+    <property name="name" value="tree"/>
+   </properties>
+  </object>
   <object id="11" x="352.667" y="176.667" width="47.3333" height="15.3333"/>
  </objectgroup>
 </map>

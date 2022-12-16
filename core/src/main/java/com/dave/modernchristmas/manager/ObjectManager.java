@@ -2,13 +2,12 @@ package com.dave.modernchristmas.manager;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.dave.modernchristmas.ModernChristmas;
-import com.dave.modernchristmas.event.AttackEvent;
 import com.dave.modernchristmas.event.GameStartEvent;
 import com.dave.modernchristmas.event.KeyInputEvent;
 import com.dave.modernchristmas.object.GameObject;
+import com.dave.modernchristmas.object.Nutcracker;
 import com.dave.modernchristmas.object.Platform;
 import com.dave.modernchristmas.object.Player;
 
@@ -22,6 +21,10 @@ public class ObjectManager {
     private GameScreen gameScreen;
 
     private Array<GameObject> objects = new Array<>();
+
+
+    private int coolDown = 3000;
+    private long lastTime = System.currentTimeMillis();
 
     public ObjectManager(GameScreen gameScreen) {
         ModernChristmas.eventBus.register(this);
@@ -45,10 +48,10 @@ public class ObjectManager {
     @Subscribe
     public void onKeyInput(KeyInputEvent event) {
         switch (event.keyCode) {
-            case Input.Keys.C :
+            case Input.Keys.Z :
                 if (event.keyDown) {
-                    addObject(new Platform(gameScreen,player.getPosition().x, player.getPosition().y + 50));
-
+                    addObject(new Platform(gameScreen,player.getPosition().x, player.getPosition().y));
+//
                 }
                 break;
             default:
@@ -56,6 +59,8 @@ public class ObjectManager {
     }
 
     public void update(SpriteBatch batch, float delta) {
+        if (!gameScreen.isGameStarted()) return;
+
         if (player != null) {
             player.update(batch, delta);
         }
@@ -63,6 +68,12 @@ public class ObjectManager {
         for (GameObject gameObject : objects) {
             gameObject.update(batch, delta);
         }
+
+        if (System.currentTimeMillis() - lastTime > coolDown) {
+            lastTime = System.currentTimeMillis();
+            addObject(new Nutcracker(gameScreen, 600, 300));
+        }
+
 
     }
 }

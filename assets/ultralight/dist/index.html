@@ -8,25 +8,45 @@
 
 <script defer src="js/app.js"></script><link href="css/app.css" rel="stylesheet"></head>
 
-<body>
-<div class="h-full flex flex-col items-center justify-center">
+<body id="main">
 
-<!--  wrapper-->
-  <div id="title-screen" class="h-full flex flex-col items-center justify-center">
-    <!--  title-->
-    <h1 class="text-4xl text-white mb-48">Modern Christmas: The Last Tree</h1>
-
-    <!--  touch to start-->
-    <div id="touch-to-start" class="flex flex-col justify-center items-center" >
-
-      <div class="rounded-full w-48 h-48 bg-transparent border-4 animate-ping delay-1000 border-white"></div>
-      <div class="absolute text-white text-lg">Touch To Start</div>
-    </div>
-  </div>
-
-</div>
 
 
 </body>
+
+<template id="game-over-template" >
+  <div id="game-over" class="h-full flex flex-col items-center justify-center">
+<!--    button-->
+    <div class="flex flex-col items-center">
+      <div id="play-again-button" class="mt-20 flex items-center justify-center border-2 w-16 h-16 cursor-pointer rounded-full duration-500 text-blue-400 border-blue-400 hover:bg-blue-400 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+             stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/>
+        </svg>
+      </div>
+      <div class="text-gray-200 mt-2">Play Again</div>
+    </div>
+  </div>
+</template>
+
+<template id="title-template">
+<!--  main wrapper-->
+  <div id="title-screen" class="h-full flex flex-col items-center justify-center">
+    <!--  wrapper-->
+    <div class="h-full flex flex-col items-center justify-center">
+      <!--  title-->
+      <h1 class="text-4xl text-white mb-48">Modern Christmas: The Last Tree</h1>
+
+      <!--  touch to start-->
+      <div id="touch-to-start" class="flex flex-col justify-center items-center" >
+
+        <div class="rounded-full w-48 h-48 bg-transparent border-4 animate-ping delay-1000 border-white"></div>
+        <div class="absolute text-white text-lg">Touch To Start</div>
+      </div>
+    </div>
+  </div>
+
+</template>
 
 </html>

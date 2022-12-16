@@ -1,8 +1,6 @@
 package com.dave.modernchristmas.object;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,18 +9,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.utils.Array;
-import com.dave.modernchristmas.AssetManagerResolving;
 import com.dave.modernchristmas.Constants;
-import com.dave.modernchristmas.GameData;
 
 import com.dave.modernchristmas.ModernChristmas;
 import com.dave.modernchristmas.event.AttackEvent;
 import com.dave.modernchristmas.event.KeyInputEvent;
 import com.dave.modernchristmas.screen.GameScreen;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.EnumMap;
 
 
 import static com.dave.modernchristmas.object.AnimationFactory.AnimationState.*;
@@ -42,14 +35,14 @@ public class Player implements GameObject {
 
     private float maxVelocityX = 100f;
 
-    private AnimationFactory.AnimationState animationState = IDLE;
+    private AnimationFactory.AnimationState animationState = PLAYER_IDLE;
 
 
     public Player(GameScreen gameScreen) {
         ModernChristmas.eventBus.register(this);
 
         sprite = new Sprite();
-        sprite.setBounds(0, 0, IDLE.xBound, IDLE.yBound);
+        sprite.setBounds(0, 0, PLAYER_IDLE.xBound, PLAYER_IDLE.yBound);
         sprite.setScale(0.75f);
 
         BodyDef bodyDef = new BodyDef();
@@ -66,6 +59,7 @@ public class Player implements GameObject {
 
         body = gameScreen.getMapWorldManager().getWorld().createBody(bodyDef);
         body.createFixture(fdef);
+        body.setUserData("player");
 
     }
 
@@ -74,16 +68,16 @@ public class Player implements GameObject {
         sprite.setBounds(0,0,animationState.xBound, animationState.yBound);
 
         switch (animationState) {
-            case ATTACK_1:
-                if (AnimationFactory.getAnimation(ATTACK_1).isAnimationFinished(stateTime)) {
+            case PLAYER_ATTACK1:
+                if (AnimationFactory.getAnimation(PLAYER_ATTACK1).isAnimationFinished(stateTime)) {
                     stateTime = 0;
-                    animationState = IDLE;
+                    animationState = PLAYER_IDLE;
                     return getActiveFrame();
                 }
-                return AnimationFactory.getAnimation(ATTACK_1).getKeyFrame(stateTime);
-            case IDLE:
+                return AnimationFactory.getAnimation(PLAYER_ATTACK1).getKeyFrame(stateTime);
+            case PLAYER_IDLE:
             default:
-                return AnimationFactory.getAnimation(IDLE).getKeyFrame(stateTime, true);
+                return AnimationFactory.getAnimation(PLAYER_IDLE).getKeyFrame(stateTime, true);
 
         }
     }
@@ -124,15 +118,15 @@ public class Player implements GameObject {
                 rightPressed = event.keyDown;
                 break;
             case Input.Keys.UP:
-                if (Math.abs(body.getLinearVelocity().y) < 20f) {
+                if (Math.abs(body.getLinearVelocity().y) < 5f) {
                     body.applyLinearImpulse(new Vector2(0, 50f), body.getWorldCenter(), true);
 
                 }
                 break;
 
             case Input.Keys.X:
-                if (event.keyDown && animationState != ATTACK_1) {
-                    animationState = ATTACK_1;
+                if (event.keyDown && animationState != PLAYER_ATTACK1) {
+                    animationState = PLAYER_ATTACK1;
                     stateTime = 0;
                     body.applyLinearImpulse(new Vector2(0, 30f), body.getWorldCenter(), true);
 

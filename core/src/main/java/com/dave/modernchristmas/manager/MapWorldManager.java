@@ -15,10 +15,8 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.dave.modernchristmas.AssetManagerResolving;
-import com.dave.modernchristmas.Constants;
-import com.dave.modernchristmas.GameData;
-import com.dave.modernchristmas.TiledMapRendererBleeding;
+import com.dave.modernchristmas.*;
+import com.dave.modernchristmas.event.EnemyAtTreeEvent;
 import jdk.vm.ci.meta.Constant;
 
 public class MapWorldManager {
@@ -36,6 +34,52 @@ public class MapWorldManager {
         TiledMap tiledMap = assetManager.get("untitled.tmx", TiledMap.class);
 
         world = new World(new Vector2(0, -100), true);
+        world.setContactFilter((fixtureA, fixtureB) -> {
+            if (fixtureA.getUserData() != null && fixtureB.getUserData() != null) {
+                if (fixtureA.getUserData().getClass() == fixtureB.getUserData().getClass()) {
+                    return false;
+                }
+
+            }
+            return true;
+        });
+
+        world.setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                Body body1 = contact.getFixtureA().getBody();
+                Body body2 = contact.getFixtureB().getBody();
+
+                if (body1.getUserData() != null && body2.getUserData() != null) {
+                    //enemy reached tree!
+                    if (body1.getUserData().equals("tree") && body2.getUserData().equals("nutcracker") || body2.getUserData().equals("nutcracker") && body1.getUserData().equals("tree")) {
+                        EnemyAtTreeEvent event = new EnemyAtTreeEvent();
+
+                        Body enemyBody;
+                        if (body1.getUserData().equals("nutcracker")) enemyBody = body1;
+                        else enemyBody = body2;
+
+                        event.enemyBody = enemyBody;
+                        ModernChristmas.eventBus.post(event);
+                    }
+                }
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        });
         renderer = new TiledMapRendererBleeding(tiledMap, 1/ Constants.PIXELS_PER_METER);
         debugRenderer = new Box2DDebugRenderer();
 
@@ -60,9 +104,11 @@ public class MapWorldManager {
 
     }
 
+
     private void loadMap(TiledMap map) {
         for (MapLayer mapLayer : map.getLayers()) {
             for (MapObject object : mapLayer.getObjects()) {
+                String bodyData = object.getProperties().get("name", String.class);
                 Shape shape;
                 if (object instanceof RectangleMapObject) {
                     shape = getRectangle((RectangleMapObject)object);
@@ -85,6 +131,7 @@ public class MapWorldManager {
                 Body body = world.createBody(bdef);
                 fdef.shape = shape;
                 body.createFixture(fdef);
+                body.setUserData(bodyData);
             }
 
         }
