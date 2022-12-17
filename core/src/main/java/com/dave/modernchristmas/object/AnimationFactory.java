@@ -43,7 +43,10 @@ public class AnimationFactory {
 
     public enum AnimationState {
         PLAYER_IDLE(16, 24, 0.105f,"Meow-Knight_Idle.png" ),
-        PLAYER_ATTACK1(32, 35, 0.2f, "Meow-Knight_Attack_3.png");
+        PLAYER_ATTACK1(32, 35, 0.2f, "Meow-Knight_Attack_3.png"),
+        PLAYER_DAMAGE(16, 23, 0.105f, "Meow-Knight_Take_Damage.png"),
+
+        SKELETON(500, 500, 0.105f, "skeleton.png");
 
         public final int xBound;
         public final int yBound;

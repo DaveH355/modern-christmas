@@ -14,19 +14,20 @@ import com.dave.modernchristmas.event.EnemyAtTreeEvent;
 import com.dave.modernchristmas.screen.GameScreen;
 import org.greenrobot.eventbus.Subscribe;
 
+import static com.dave.modernchristmas.object.AnimationFactory.AnimationState.SKELETON;
 
-public class Nutcracker implements GameObject {
+public class Skeleton implements GameObject {
     private Sprite sprite;
     private Body body;
 
     private float stateTime = 0;
     private GameScreen screen;
-
     private float damageRange = 25f;
     private boolean shouldKill = false;
     private Sound deathSound;
     private int speed;
-    public Nutcracker(GameScreen screen, float positionX, float positionY, int speed) {
+
+    public Skeleton(GameScreen screen, float positionX, float positionY, int speed) {
         this.speed = speed;
         ModernChristmas.eventBus.register(this);
         AssetManagerResolving assetManager = GameData.getInstance().getGame().getAssetManager();
@@ -35,8 +36,9 @@ public class Nutcracker implements GameObject {
         this.screen = screen;
 
 
-        sprite = new Sprite(assetManager.get("nutcracker.png", Texture.class));
-        sprite.setScale(0.5f);
+        sprite = new Sprite();
+        sprite.setBounds(0, 0, SKELETON.xBound, SKELETON.yBound );
+        sprite.setScale(0.1f);
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.x = positionX / Constants.PIXELS_PER_METER;
@@ -65,12 +67,10 @@ public class Nutcracker implements GameObject {
         }
         stateTime += delta;
         body.setLinearVelocity(speed, body.getLinearVelocity().y);
-        sprite.setPosition(body.getPosition().x - 15 , body.getPosition().y - 25);
+        sprite.setRegion(AnimationFactory.getAnimation(SKELETON).getKeyFrame(stateTime, true));
+        sprite.setPosition(body.getPosition().x - 25 , body.getPosition().y - 25);
+        sprite.flip(true, false);
         sprite.draw(batch);
-
-        if (body.getPosition().y < -400) {
-            shouldKill = true;
-        }
     }
 
     private void kill() {

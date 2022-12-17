@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dave.modernchristmas.Constants;
+import com.dave.modernchristmas.GameData;
 import com.dave.modernchristmas.ModernChristmas;
 
 import com.dave.modernchristmas.event.EnemyAtTreeEvent;
@@ -95,15 +96,44 @@ public class GameScreen implements InputProcessor, Screen {
     public void restart() {
         ModernChristmas.eventBus = EventBus.builder().logNoSubscriberMessages(false).sendNoSubscriberEvent(false).build();
         game.setScreen(new GameScreen(game));
+        GameData.getInstance().setScore(0);
     }
 
     @Subscribe
     public void enemyAtTree(EnemyAtTreeEvent event) {
-        System.out.println("got it!");
-        gameStarted = false;
+        if (gameStarted) {
+            endGame();
+        }
+    }
 
+    public void endGame() {
+        gameStarted = false;
         try {
             viewController.getView().evaluateScript("window.gameOver()");
+        } catch (JavascriptEvaluationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setHealth(String health) {
+        try {
+            viewController.getView().evaluateScript("window.setHealth(\"{}\")".replace("{}", health));
+        } catch (JavascriptEvaluationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void warnHealth() {
+        try {
+            viewController.getView().evaluateScript("window.warnHealth()");
+        } catch (JavascriptEvaluationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setScore(int score) {
+        try {
+            viewController.getView().evaluateScript("window.setScore(\"{}\")".replace("{}", score + ""));
         } catch (JavascriptEvaluationException e) {
             throw new RuntimeException(e);
         }

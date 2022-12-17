@@ -14,20 +14,13 @@ object/Meow Knight/Meow-Knight_Idle.png
 object/Meow Knight/Meow-Knight_Take_Damage.png
 object/Meow Knight/Meow_Knight.aseprite
 object/nutcracker.png
+object/skeleton.png
 object/sleigh.png
 object/treesmall.png
 skin/default.fnt
 skin/uiskin.atlas
 skin/uiskin.json
 skin/uiskin.png
-ultralight/bin/AppCore.dll
-ultralight/bin/ultralight-java-gpu.dll
-ultralight/bin/ultralight-java.dll
-ultralight/bin/Ultralight.dll
-ultralight/bin/UltralightCore.dll
-ultralight/bin/WebCore.dll
-ultralight/dist/css/app.css
-ultralight/dist/index.html
-ultralight/dist/js/app.js
-ultralight/resources/cacert.pem
-ultralight/resources/icudt67l.dat
+sound/death.wav
+sound/place.wav
+sound/sword.mp3

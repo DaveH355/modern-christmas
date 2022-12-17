@@ -1,6 +1,7 @@
 package com.dave.modernchristmas.object;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,11 +10,14 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.dave.modernchristmas.AssetManagerResolving;
 import com.dave.modernchristmas.Constants;
 
+import com.dave.modernchristmas.GameData;
 import com.dave.modernchristmas.ModernChristmas;
 import com.dave.modernchristmas.event.AttackEvent;
 import com.dave.modernchristmas.event.KeyInputEvent;
+import com.dave.modernchristmas.event.PlayerDamageEvent;
 import com.dave.modernchristmas.screen.GameScreen;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -35,11 +39,21 @@ public class Player implements GameObject {
 
     private float maxVelocityX = 100f;
 
+    private int damageCooldown = 500;
+    private boolean warned = false;
+    private long lastDamageCheck = System.currentTimeMillis();
     private AnimationFactory.AnimationState animationState = PLAYER_IDLE;
+    private GameScreen screen;
+    private int health = 100;
+    private Sound attackSound;
 
 
     public Player(GameScreen gameScreen) {
+        this.screen = gameScreen;
         ModernChristmas.eventBus.register(this);
+        AssetManagerResolving assetManager = GameData.getInstance().getGame().getAssetManager();
+
+        attackSound = assetManager.get("sword.mp3", Sound.class);
 
         sprite = new Sprite();
         sprite.setBounds(0, 0, PLAYER_IDLE.xBound, PLAYER_IDLE.yBound);
@@ -75,6 +89,9 @@ public class Player implements GameObject {
                     return getActiveFrame();
                 }
                 return AnimationFactory.getAnimation(PLAYER_ATTACK1).getKeyFrame(stateTime);
+
+            case PLAYER_DAMAGE:
+                return AnimationFactory.getAnimation(PLAYER_DAMAGE).getKeyFrame(stateTime, true);
             case PLAYER_IDLE:
             default:
                 return AnimationFactory.getAnimation(PLAYER_IDLE).getKeyFrame(stateTime, true);
@@ -103,9 +120,41 @@ public class Player implements GameObject {
 
         sprite.setRegion(getActiveFrame());
 
-        sprite.setPosition(body.getPosition().x - 5, body.getPosition().y - 7);
+
+        int xOffset = 5;
+        int yOffset = 7;
+
+        sprite.setPosition(body.getPosition().x - xOffset, body.getPosition().y - yOffset);
         sprite.draw(batch);
 
+        if (animationState == PLAYER_DAMAGE && System.currentTimeMillis() - lastDamageCheck > damageCooldown) {
+            health -= 2;
+            if (health <= 0) {
+                screen.endGame();
+                return;
+            }
+
+            if (health < 50 && !warned) {
+                screen.warnHealth();
+                warned = true;
+            }
+
+            lastDamageCheck = System.currentTimeMillis();
+            screen.setHealth(health +"%");
+        }
+
+    }
+
+    @Subscribe
+    public void onDamage(PlayerDamageEvent event) {
+        if (event.isStart) {
+            animationState = PLAYER_DAMAGE;
+            stateTime = 0;
+        } else if (animationState == PLAYER_DAMAGE) {
+            animationState = PLAYER_IDLE;
+            stateTime = 0;
+
+        }
     }
 
     @Subscribe
@@ -126,6 +175,7 @@ public class Player implements GameObject {
 
             case Input.Keys.X:
                 if (event.keyDown && animationState != PLAYER_ATTACK1) {
+                    attackSound.play(0.25f);
                     animationState = PLAYER_ATTACK1;
                     stateTime = 0;
                     body.applyLinearImpulse(new Vector2(0, 30f), body.getWorldCenter(), true);

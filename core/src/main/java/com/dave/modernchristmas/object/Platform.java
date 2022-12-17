@@ -1,5 +1,6 @@
 package com.dave.modernchristmas.object;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +19,7 @@ public class Platform implements GameObject{
     private Body body;
     private int lifeTime = 5000;
     private final long creation = System.currentTimeMillis();
+    private Sound sound;
     private GameScreen screen;
 
     public Platform(GameScreen screen, float positionX, float positionY) {
@@ -27,6 +29,9 @@ public class Platform implements GameObject{
         sprite = new Sprite(assetManager.get("glass.png", Texture.class));
         sprite.setScale(0.15f);
 
+        sound = assetManager.get("place.wav", Sound.class);
+
+        sound.play(1f);
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.x = positionX;
@@ -37,7 +42,7 @@ public class Platform implements GameObject{
 
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(5f / Constants.PIXELS_PER_METER, 5f / Constants.PIXELS_PER_METER);
+        shape.setAsBox(6f / Constants.PIXELS_PER_METER, 6f / Constants.PIXELS_PER_METER);
         fdef.shape = shape;
 
         body = screen.getMapWorldManager().getWorld().createBody(bodyDef);

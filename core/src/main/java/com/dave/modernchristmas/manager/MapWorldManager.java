@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.dave.modernchristmas.*;
 import com.dave.modernchristmas.event.EnemyAtTreeEvent;
+import com.dave.modernchristmas.event.PlayerDamageEvent;
 import jdk.vm.ci.meta.Constant;
 
 public class MapWorldManager {
@@ -62,12 +63,28 @@ public class MapWorldManager {
                         event.enemyBody = enemyBody;
                         ModernChristmas.eventBus.post(event);
                     }
+                    //player hit nutcracker!
+                    if (body1.getUserData().equals("player") && body2.getUserData().equals("nutcracker") || body2.getUserData().equals("nutcracker") && body1.getUserData().equals("player")) {
+                        PlayerDamageEvent event = new PlayerDamageEvent();
+                        event.isStart = true;
+                        ModernChristmas.eventBus.post(event);
+                    }
                 }
             }
 
             @Override
             public void endContact(Contact contact) {
+                Body body1 = contact.getFixtureA().getBody();
+                Body body2 = contact.getFixtureB().getBody();
 
+                if (body1.getUserData() != null && body2.getUserData() != null) {
+                    //player hit nutcracker!
+                    if (body1.getUserData().equals("player") && body2.getUserData().equals("nutcracker") || body2.getUserData().equals("nutcracker") && body1.getUserData().equals("player")) {
+                        PlayerDamageEvent event = new PlayerDamageEvent();
+                        event.isStart = false;
+                        ModernChristmas.eventBus.post(event);
+                    }
+                }
             }
 
             @Override
@@ -96,7 +113,7 @@ public class MapWorldManager {
             accumulator -= TIME_STEP;
         }
 
-        debugRenderer.render(world, camera.combined);
+//        debugRenderer.render(world, camera.combined);
 
         //render map
         renderer.setView(camera);
